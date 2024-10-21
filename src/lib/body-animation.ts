@@ -69,9 +69,8 @@ export function createBodyAnimation(
       const controller = animationController();
       const callbacks = animationCallbacks();
       untrack(() => {
-        const callbacks = animationCallbacks();
         callbacks.forEach((cb) => {
-          animationController().add(cb);
+          controller.add(cb);
         });
       });
       return { controller, callbacks };
