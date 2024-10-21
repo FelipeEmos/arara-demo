@@ -1,8 +1,6 @@
 import { H2Typography, H3Typography } from "~/components/typography";
-import { createMousePosition } from "@solid-primitives/mouse";
-import { Accessor, createEffect, createSignal, onCleanup } from "solid-js";
+import { createSignal } from "solid-js";
 import { createSineWave, makeSineWavePass } from "~/lib/wave/sine";
-import { createContainer } from "~/utils/create-container";
 import { createElementSize } from "@solid-primitives/resize-observer";
 import { createBodyAnimation } from "~/lib/body-animation";
 import { additivePass } from "~/lib/composers/additive-pass";
@@ -12,19 +10,19 @@ export default function Home() {
     <div class="flex flex-col gap-8 p-8 pb-20">
       <H2Typography>Arara</H2Typography>
       <H3Typography class="border-l-4 border-blue-600 pl-4 text-blue-600">
-        Sine Wave Demo
+        Sine Wave
       </H3Typography>
       <SineDemo />
 
       <H3Typography class="border-l-4 border-blue-600 pl-4 text-blue-600">
-        Custom Sine Wave Demo
+        Two Sine Waves Added
       </H3Typography>
-      <CustomSineCombinedDemo />
+      <AdditiveSineDemo />
     </div>
   );
 }
 
-function CustomSineCombinedDemo() {
+function AdditiveSineDemo() {
   const [container, setContainer] = createSignal<HTMLDivElement>();
   const containerSize = createElementSize(container);
 
