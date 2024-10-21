@@ -5,6 +5,7 @@ import { createSineWave, makeSineWavePass } from "~/lib/wave/sine";
 import { createContainer } from "~/utils/create-container";
 import { createElementSize } from "@solid-primitives/resize-observer";
 import { createBodyAnimation } from "~/lib/body-animation";
+import { additivePass } from "~/lib/composers/additive-pass";
 
 export default function Home() {
   return (
@@ -37,23 +38,14 @@ function CustomSineCombinedDemo() {
       amplitude: 90,
       phase: Math.PI / 2,
     }),
-    // TODO: This is not working, it is ignoring the previous pass
-    makeSineWavePass(() => ({
-      offset: 0,
-      frequency: 1,
-      amplitude: 45,
-      phase: Math.PI / 2,
-    })),
-    // The way to make it work will be to use combinators
-    // like:
-    // additivePass(
-    //   makeSineWavePass({
-    //     offset: 0,
-    //     frequency: 1,
-    //     amplitude: 45,
-    //     phase: Math.PI / 2,
-    //   }),
-    // ),
+    additivePass(
+      makeSineWavePass(() => ({
+        offset: 0,
+        frequency: 2,
+        amplitude: 45,
+        phase: Math.PI / 2,
+      })),
+    ),
   ]);
 
   const xOffset = () => {
