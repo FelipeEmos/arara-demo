@@ -1,6 +1,10 @@
 {
   "name": "example-with-tailwindcss",
   "type": "module",
+  "author": {
+    "name": "Your Name",
+    "email": "felipe.emos.computacao@gmail.com"
+  },
   "license": "MIT",
   "scripts": {
     "dev": "vinxi dev",
