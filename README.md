@@ -95,6 +95,9 @@ const [bird] = create2DSpring(() => ({
 }));
 ```
 
+https://github.com/user-attachments/assets/de555220-515f-4da5-8d6f-a1243ed8a7fb
+
+
 # TODO
 
 - Section on primitives `createAnimation`, `createBodyAnimation`
