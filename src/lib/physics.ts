@@ -17,3 +17,26 @@ export type Body3D = {
   velocity: vec3;
   acceleration: vec3;
 };
+
+type Dimension = 0 | 1 | 2 | "x" | "y" | "z";
+export function getAxis(dimension: Dimension): number {
+  if (typeof dimension === "number") return dimension;
+  if (dimension === "x") return 0;
+  if (dimension === "y") return 1;
+  if (dimension === "z") return 2;
+  throw new Error(`Invalid dimension: ${dimension}`);
+}
+
+export function sliceDimension(dimension: Dimension, body: Body2D): Body;
+export function sliceDimension(dimension: Dimension, body: Body3D): Body;
+export function sliceDimension(
+  dimension: Dimension,
+  body: Body3D | Body2D,
+): Body {
+  const axis = getAxis(dimension);
+  return {
+    position: body.position[axis],
+    velocity: body.velocity[axis],
+    acceleration: body.acceleration[axis],
+  };
+}

@@ -4,6 +4,8 @@ import { createSineWave, makeSineWavePass } from "~/lib/wave/sine";
 import { createElementSize } from "@solid-primitives/resize-observer";
 import { createBodyAnimation } from "~/lib/body-animation";
 import { additivePass } from "~/lib/composers/additive-pass";
+import { createBody2DAnimation } from "~/lib/body-2d-animation";
+import { compose2DPass } from "~/lib/composers/dimension-pass";
 
 export default function Home() {
   return (
@@ -18,6 +20,11 @@ export default function Home() {
         Two Sine Waves Added
       </H3Typography>
       <AdditiveSineDemo />
+
+      <H3Typography class="border-l-4 border-blue-600 pl-4 text-blue-600">
+        Compose 2 Sines in 2D
+      </H3Typography>
+      <ComposeSineDemo />
     </div>
   );
 }
@@ -101,6 +108,62 @@ function SineDemo() {
         class="size-10 rounded-full bg-cyan-500 shadow-xl"
         style={{
           transform: `translate(${xOffset()}px`,
+        }}
+        ref={setBall}
+      />
+    </div>
+  );
+}
+
+function ComposeSineDemo() {
+  const [container, setContainer] = createSignal<HTMLDivElement>();
+  const containerSize = createElementSize(container);
+
+  const [ball, setBall] = createSignal<HTMLDivElement>();
+  const ballSize = createElementSize(ball);
+
+  const [body] = createBody2DAnimation(() => [
+    compose2DPass({
+      x: makeSineWavePass({
+        offset: 0,
+        amplitude: 90,
+        phase: Math.PI / 2,
+        frequency: 1,
+      }),
+      y: makeSineWavePass({
+        offset: 0,
+        amplitude: 90,
+        phase: 0,
+        frequency: 1,
+      }),
+    }),
+  ]);
+
+  const xOffset = () => {
+    return (
+      body.position[0] +
+      -(ballSize.width ?? 0) / 2 +
+      (containerSize.width ?? 0) / 2
+    );
+  };
+
+  const yOffset = () => {
+    return (
+      body.position[1] +
+      -(ballSize.height ?? 0) / 2 +
+      (containerSize.height ?? 0) / 2
+    );
+  };
+
+  return (
+    <div
+      class="h-96 w-full overflow-hidden rounded-lg bg-slate-300 p-8 shadow-inner"
+      ref={setContainer}
+    >
+      <div
+        class="size-10 rounded-full bg-cyan-500 shadow-xl"
+        style={{
+          transform: `translate(${xOffset()}px, ${yOffset()}px)`,
         }}
         ref={setBall}
       />
