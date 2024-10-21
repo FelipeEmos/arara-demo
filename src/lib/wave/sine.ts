@@ -19,7 +19,7 @@ const defaultOptions: SineWaveOptions = {
   phase: 0,
 };
 
-export function makeSineWavePass(
+export function sineWavePass(
   options?: Partial<SineWaveOptions> | Accessor<Partial<SineWaveOptions>>,
 ): BodyAnimationPass {
   return ({ currentTime }) => {
@@ -46,7 +46,7 @@ export function createSineWave(
   bodyAnimationOptions?: () => BodyAnimationOptions,
 ) {
   return createBodyAnimation(
-    () => [makeSineWavePass(options)],
+    () => [sineWavePass(options)],
     bodyAnimationOptions,
   );
 }

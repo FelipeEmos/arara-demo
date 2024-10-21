@@ -1,6 +1,6 @@
 import { H2Typography, H3Typography } from "~/components/typography";
 import { createSignal } from "solid-js";
-import { createSineWave, makeSineWavePass } from "~/lib/wave/sine";
+import { createSineWave, sineWavePass } from "~/lib/wave/sine";
 import { createElementSize } from "@solid-primitives/resize-observer";
 import { createBodyAnimation } from "~/lib/body-animation";
 import { additivePass } from "~/lib/composers/additive-pass";
@@ -37,14 +37,14 @@ function AdditiveSineDemo() {
   const ballSize = createElementSize(ball);
 
   const [body] = createBodyAnimation(() => [
-    makeSineWavePass({
+    sineWavePass({
       offset: 0,
       frequency: 1,
       amplitude: 90,
       phase: Math.PI / 2,
     }),
     additivePass(
-      makeSineWavePass(() => ({
+      sineWavePass(() => ({
         offset: 0,
         frequency: 2,
         amplitude: 45,
@@ -124,17 +124,13 @@ function ComposeSineDemo() {
 
   const [body] = createBody2DAnimation(() => [
     compose2DPass({
-      x: makeSineWavePass({
-        offset: 0,
+      x: sineWavePass({
         amplitude: 90,
         phase: Math.PI / 2,
-        frequency: 1,
       }),
-      y: makeSineWavePass({
-        offset: 0,
+      y: sineWavePass({
         amplitude: 90,
         phase: 0,
-        frequency: 1,
       }),
     }),
   ]);
