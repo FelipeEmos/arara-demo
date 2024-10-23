@@ -12,12 +12,12 @@ export type SineWaveOptions = {
   phase: number;
 };
 
-const defaultOptions: SineWaveOptions = {
+export const defaultOptions = {
   offset: 0,
   frequency: 1,
   amplitude: 1,
   phase: 0,
-};
+} as const satisfies SineWaveOptions;
 
 export function sineWavePass(
   options?: Partial<SineWaveOptions> | Accessor<Partial<SineWaveOptions>>,

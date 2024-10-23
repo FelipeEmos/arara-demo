@@ -18,7 +18,7 @@ export type Body3D = {
   acceleration: vec3;
 };
 
-type Dimension = 0 | 1 | 2 | "x" | "y" | "z";
+export type Dimension = 0 | 1 | 2 | "x" | "y" | "z";
 export function getAxis(dimension: Dimension): number {
   if (typeof dimension === "number") return dimension;
   if (dimension === "x") return 0;
