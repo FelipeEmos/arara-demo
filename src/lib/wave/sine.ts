@@ -42,7 +42,7 @@ export function sineWavePass(
 }
 
 export function createSineWave(
-  options: Accessor<Partial<SineWaveOptions>> = () => defaultOptions,
+  options?: Partial<SineWaveOptions> | Accessor<Partial<SineWaveOptions>>,
   bodyAnimationOptions?: () => BodyAnimationOptions,
 ) {
   return createBodyAnimation(
