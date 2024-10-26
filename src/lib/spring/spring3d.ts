@@ -42,10 +42,14 @@ export function spring3DPass(
       throw new Error("Cannot create a spring3D animation with mass 0");
     }
 
+    // Elastic
     vec3.sub(distanceVector, target, body.position);
     vec3.scale(elasticForce, distanceVector, stiffness);
+
+    // Fricction
     vec3.scale(fricctionForce, body.velocity, -damping);
 
+    // Resulting Force
     vec3.add(sumForces, elasticForce, fricctionForce);
 
     const acceleration = vec3.scale(vec3.create(), sumForces, 1 / mass);
@@ -58,7 +62,7 @@ export function spring3DPass(
     const position = vec3.scaleAndAdd(
       vec3.create(),
       body.position,
-      acceleration,
+      velocity,
       deltaTime / 1000,
     );
 

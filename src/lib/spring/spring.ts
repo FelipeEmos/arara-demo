@@ -38,7 +38,7 @@ export function springPass(
 
     const delta = target - body.position;
     const elasticForce = delta * stiffness;
-    const fricctionForce = body.velocity * -damping;
+    const fricctionForce = -damping * body.velocity;
 
     const acceleration = (elasticForce + fricctionForce) / mass;
     const velocity = body.velocity + (acceleration * deltaTime) / 1000;

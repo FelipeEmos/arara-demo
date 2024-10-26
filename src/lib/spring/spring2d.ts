@@ -42,10 +42,14 @@ export function spring2DPass(
       throw new Error("Cannot create a spring2D animation with mass 0");
     }
 
+    // Elastic
     vec2.sub(distanceVector, target, body.position);
     vec2.scale(elasticForce, distanceVector, stiffness);
+
+    // Fricction
     vec2.scale(fricctionForce, body.velocity, -damping);
 
+    // Resulting Force
     vec2.add(sumForces, elasticForce, fricctionForce);
 
     const acceleration = vec2.scale(vec2.create(), sumForces, 1 / mass);
@@ -55,10 +59,11 @@ export function spring2DPass(
       acceleration,
       deltaTime / 1000,
     );
+
     const position = vec2.scaleAndAdd(
       vec2.create(),
       body.position,
-      acceleration,
+      velocity,
       deltaTime / 1000,
     );
 
