@@ -4,8 +4,7 @@ import { createSineWave, sineWavePass } from "~/lib/wave/sine";
 import { createElementSize } from "@solid-primitives/resize-observer";
 import { createBodyAnimation } from "~/lib/body-animation";
 import { additivePass } from "~/lib/composers/additive-pass";
-import { createBody2DAnimation } from "~/lib/body-2d-animation";
-import { compose2DPass } from "~/lib/composers/dimension-pass";
+import { createSine2DWave } from "~/lib/wave/sine2d";
 
 export default function Home() {
   return (
@@ -118,18 +117,10 @@ function ComposeSineDemo() {
   const [ball, setBall] = createSignal<HTMLDivElement>();
   const ballSize = createElementSize(ball);
 
-  const [body] = createBody2DAnimation(() => [
-    compose2DPass({
-      x: sineWavePass({
-        amplitude: 90,
-        phase: Math.PI / 2,
-      }),
-      y: sineWavePass({
-        amplitude: 90,
-        phase: 0,
-      }),
-    }),
-  ]);
+  const [body] = createSine2DWave({
+    amplitude: [90, 90],
+    phase: [Math.PI / 2, 0],
+  });
 
   const xOffset = () => {
     return (
