@@ -9,7 +9,7 @@ import { vec3 } from "gl-matrix";
 export type Spring3DOptions = {
   mass: number;
   target: vec3;
-  initialPosition: vec3;
+  targetThreshold?: number;
   damping: number;
   stiffness: number;
 };
@@ -17,7 +17,7 @@ export type Spring3DOptions = {
 export const defaultOptions = {
   mass: 1,
   target: [1, 1, 1],
-  initialPosition: [0, 0, 0],
+  targetThreshold: 0.001,
   damping: 0.5,
   stiffness: 0.5,
 } as const satisfies Spring3DOptions;
@@ -32,10 +32,19 @@ export function spring3DPass(
 
   return ({ body, deltaTime }) => {
     const opts = typeof options === "function" ? options() : options;
-    const { target, damping, stiffness, mass } = {
+    const { target, targetThreshold, damping, stiffness, mass } = {
       ...defaultOptions,
       ...opts,
     };
+
+    const threshold = vec3.distance(target, body.position);
+    if (Math.abs(threshold) < Math.abs(targetThreshold)) {
+      return {
+        position: target,
+        velocity: [0, 0, 0],
+        acceleration: [0, 0, 0],
+      };
+    }
 
     if (mass === 0) {
       // FIXME: Is this the best way to handle this in library code?

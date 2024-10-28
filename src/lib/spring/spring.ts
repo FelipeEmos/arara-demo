@@ -8,7 +8,7 @@ import {
 export type SpringOptions = {
   mass: number;
   target: number;
-  initialPosition: number;
+  targetThreshold?: number;
   damping: number;
   stiffness: number;
 };
@@ -16,7 +16,7 @@ export type SpringOptions = {
 export const defaultOptions = {
   mass: 1,
   target: 1,
-  initialPosition: 0,
+  targetThreshold: 0.001,
   damping: 0.5,
   stiffness: 0.5,
 } as const satisfies SpringOptions;
@@ -26,10 +26,18 @@ export function springPass(
 ): BodyAnimationPass {
   return ({ body, deltaTime }) => {
     const opts = typeof options === "function" ? options() : options;
-    const { target, damping, stiffness, mass } = {
+    const { target, targetThreshold, damping, stiffness, mass } = {
       ...defaultOptions,
       ...opts,
     };
+    const threshold = target - body.position;
+    if (Math.abs(threshold) < Math.abs(targetThreshold)) {
+      return {
+        position: target,
+        velocity: 0,
+        acceleration: 0,
+      };
+    }
 
     if (mass === 0) {
       // FIXME: Is this the best way to handle this in library code?

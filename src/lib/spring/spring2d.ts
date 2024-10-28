@@ -10,6 +10,7 @@ export type Spring2DOptions = {
   mass: number;
   target: vec2;
   initialPosition: vec2;
+  targetThreshold?: number;
   damping: number;
   stiffness: number;
 };
@@ -17,6 +18,7 @@ export type Spring2DOptions = {
 export const defaultOptions = {
   mass: 1,
   target: [1, 1],
+  targetThreshold: 0.001,
   initialPosition: [0, 0],
   damping: 0.5,
   stiffness: 0.5,
@@ -32,10 +34,19 @@ export function spring2DPass(
 
   return ({ body, deltaTime }) => {
     const opts = typeof options === "function" ? options() : options;
-    const { target, damping, stiffness, mass } = {
+    const { target, targetThreshold, damping, stiffness, mass } = {
       ...defaultOptions,
       ...opts,
     };
+
+    const threshold = vec2.distance(target, body.position);
+    if (Math.abs(threshold) < Math.abs(targetThreshold)) {
+      return {
+        position: target,
+        velocity: [0, 0],
+        acceleration: [0, 0],
+      };
+    }
 
     if (mass === 0) {
       // FIXME: Is this the best way to handle this in library code?
