@@ -47,8 +47,9 @@ export function createAnimationController(
   }
   const [running, setRunning] = createSignal(false);
 
-  const [currentTime, setCurrentTime] = createSignal(0);
-  const [lastPauseTime, setLastPauseTime] = createSignal(0);
+  const [animationTime, setAnimationTime] = createSignal(0);
+  const [isFirstFrameAfterResuming, setIsFirstFrameAfterResuming] =
+    createSignal(true);
 
   const [callbacks, setCallbacks] = createSignal<AnimationCallback[]>([]);
   const add = (animationCallback: AnimationCallback) => {
@@ -58,14 +59,22 @@ export function createAnimationController(
     setCallbacks(callbacks().filter((c) => c !== animationCallback));
   };
 
+  const [lastTimestamp, setLastTimestamp] = createSignal<number>(0);
+
   let rafRequestID = 0;
   const loop: FrameRequestCallback = (timestamp) => {
     rafRequestID = requestAnimationFrame(loop);
-    const virtualTimestamp = timestamp + lastPauseTime();
-    const deltaTime = virtualTimestamp - currentTime();
-    setCurrentTime(virtualTimestamp);
 
-    callbacks().forEach((c) => c({ currentTime: virtualTimestamp, deltaTime }));
+    const deltaTime = isFirstFrameAfterResuming()
+      ? 0
+      : timestamp - lastTimestamp();
+    setLastTimestamp(timestamp);
+
+    if (isFirstFrameAfterResuming()) {
+      setIsFirstFrameAfterResuming(false);
+    }
+    setAnimationTime(animationTime() + deltaTime);
+    callbacks().forEach((c) => c({ currentTime: animationTime(), deltaTime }));
   };
 
   const shouldRun = () => running() && callbacks().length > 0;
@@ -84,14 +93,14 @@ export function createAnimationController(
 
   const start = () => {
     setRunning(true);
+    setIsFirstFrameAfterResuming(true);
   };
   const pause = () => {
     setRunning(false);
-    setLastPauseTime(currentTime());
   };
   const stop = () => {
     setRunning(false);
-    setLastPauseTime(0);
+    setAnimationTime(0);
   };
 
   onCleanup(stop);
